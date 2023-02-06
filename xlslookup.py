@@ -25,3 +25,21 @@ def search_files(path):
 
 # Call the function to search the files
 search_files("/path/to/directory")
+
+####
+import os
+import win32api
+
+def get_file_product_version(file_path):
+    info = win32api.GetFileVersionInfo(file_path, "\\")
+    ms = info['FileVersionMS']
+    ls = info['FileVersionLS']
+    return win32api.HIWORD(ms), win32api.LOWORD(ms), win32api.HIWORD(ls), win32api.LOWORD(ls)
+
+folder_path = "path/to/your/folder"
+for filename in os.listdir(folder_path):
+    file_path = os.path.join(folder_path, filename)
+    if os.path.isfile(file_path):
+        major, minor, build, revision = get_file_product_version(file_path)
+        product_version = "{}.{}.{}.{}".format(major, minor, build, revision)
+        print("Product version for", filename, ":", product_version)
